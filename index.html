@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Life Plus Health Care</title>
+    
+    <!-- PWA Support -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    
+    <!-- Third-party CDNs -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <!-- Local CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Life Plus Health Care</h1>
+        <nav>
+            <ul>
+                <li><a href="#trip-management">Trip Management</a></li>
+                <li><a href="#financial-analysis">Financial Analysis</a></li>
+                <li><a href="#data-analytics">Data Analytics</a></li>
+                <li><a href="#visualization">Visualization</a></li>
+                <li><a href="#financial-reports">Financial Reports</a></li>
+                <li><a href="#tracking">Tracking</a></li>
+                <li><a href="#automation">Automation</a></li>
+                <li><a href="#lead-management">Lead Management</a></li>
+                <li><a href="#import-export">Import/Export</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="trip-management">
+            <h2>Trip Management</h2>
+            <form id="trip-form">
+                <h3>Patient Information</h3>
+                <label for="patient-name">Name:</label>
+                <input type="text" id="patient-name" name="patient-name" required>
+
+                <label for="patient-contact">Contact:</label>
+                <input type="text" id="patient-contact" name="patient-contact" required>
+
+                <label for="patient-status">Status:</label>
+                <select id="patient-status" name="patient-status" required>
+                    <option value="stable">Stable</option>
+                    <option value="critical">Critical</option>
+                    <option value="unpredictable">Unpredictable</option>
+                    <option value="custom">Custom</option>
+                </select>
+
+                <textarea id="patient-custom-status" name="patient-custom-status" placeholder="Enter custom status"></textarea>
+
+                <h3>Trip Details</h3>
+                <label for="origin-hospital">Origin Hospital:</label>
+                <input type="text" id="origin-hospital" name="origin-hospital" required>
+
+                <label for="origin-city">Origin City:</label>
+                <input type="text" id="origin-city" name="origin-city" required>
+
+                <label for="destination-hospital">Destination Hospital:</label>
+                <input type="text" id="destination-hospital" name="destination-hospital" required>
+
+                <label for="destination-city">Destination City:</label>
+                <input type="text" id="destination-city" name="destination-city" required>
+
+                              <h3>Staff Information</h3>
+                <label for="driver-name">Driver Name:</label>
+                <input type="text" id="driver-name" name="driver-name" required>
+
+                <label for="nursing-staff">Nursing Staff:</label>
+                <input type="text" id="nursing-staff" name="nursing-staff" required>
+
+                <h3>Distance and Charges</h3>
+                <label for="trip-distance">Trip Distance (km):</label>
+                <input type="number" id="trip-distance" name="trip-distance">
+
+                <label for="total-charge">Total Charge:</label>
+                <input type="number" id="total-charge" name="total-charge">
+
+                <h3>Payment Record</h3>
+                <label for="payment-type">Payment Type:</label>
+                <select id="payment-type" name="payment-type" required>
+                    <option value="online">Online</option>
+                    <option value="offline">Offline</option>
+                </select>
+
+                <h3>Expenditure Breakdown</h3>
+                <label for="driver-expense">Driver Expense:</label>
+                <input type="number" id="driver-expense" name="driver-expense" required>
+
+                <label for="fuel-expense">Fuel Expense:</label>
+                <input type="number" id="fuel-expense" name="fuel-expense" required>
+
+                <label for="maintenance-expense">Maintenance Expense:</label>
+                <input type="number" id="maintenance-expense" name="maintenance-expense" required>
+
+                <label for="nursing-staff-expense">Nursing Staff Expense:</label>
+                <input type="number" id="nursing-staff-expense" name="nursing-staff-expense" required>
+
+                <label for="misc-expense">Miscellaneous Expense:</label>
+                <input type="number" id="misc-expense" name="misc-expense" required>
+
+                <div id="expenditure-total">
+                    <h4>Total Expenditure:</h4>
+                    <p id="total-expenditure">0</p>
+                </div>
+
+                <h3>Allocation</h3>
+                <label for="savings">Savings:</label>
+                <input type="number" id="savings" name="savings">
+
+                <label for="future-projects">Future Projects:</label>
+                <input type="number" id="future-projects" name="future-projects">
+
+                <div id="allocation-total">
+                    <h4>Total Allocation:</h4>
+                    <p id="total-allocation">0</p>
+                </div>
+
+                <button type="submit">Submit Trip</button>
+                <button type="button" id="cancel-trip">Cancel Trip</button>
+            </form>
+        </section>
+
+
+              <section id="data-analytics">
+            <h2>Data Analytics & Reporting</h2>
+            
+            <!-- Trip History Section -->
+            <div id="trip-history">
+                <h3>Trip History</h3>
+                <div class="trip-controls">
+                    <div class="search-filter-group">
+                        <input 
+                            type="text" 
+                            id="search-trips" 
+                            placeholder="Search trips..."
+                            aria-label="Search trips">
+                        <select id="filter-trips" aria-label="Filter trips">
+                            <option value="">Filter by...</option>
+                            <option value="ambulance">Ambulance Number</option>
+                            <option value="city">City</option>
+                            <option value="hospital">Hospital</option>
+                            <option value="driver">Driver</option>
+                            <option value="patient">Patient Name</option>
+                            <option value="date">Date</option>
+                        </select>
+                        <div class="date-range">
+                            <input type="date" id="date-from" aria-label="From date">
+                            <input type="date" id="date-to" aria-label="To date">
+                        </div>
+                    </div>
+                    <div class="export-controls">
+                        <button id="export-trips" class="btn-primary">
+                            <i class="fas fa-download"></i> Export Trips
+                        </button>
+                        <select id="export-format">
+                            <option value="csv">CSV</option>
+                            <option value="pdf">PDF</option>
+                            <option value="xlsx">Excel</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table id="trip-history-table" class="data-table">
+                        <thead>
+                            <tr>
+                                <th data-sort="date">Date <i class="fas fa-sort"></i></th>
+                                <th data-sort="invoice">Invoice # <i class="fas fa-sort"></i></th>
+                                <th data-sort="patient">Patient Name <i class="fas fa-sort"></i></th>
+                                <th data-sort="destination">Destination <i class="fas fa-sort"></i></th>
+                                <th data-sort="driver">Driver <i class="fas fa-sort"></i></th>
+                                <th data-sort="distance">Distance <i class="fas fa-sort"></i></th>
+                                <th data-sort="charges">Total Charges <i class="fas fa-sort"></i></th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Trip data dynamically populated by script.js -->
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="6">Total</td>
+                                <td id="total-charges">₹0.00</td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <div id="pagination-controls">
+                        <button id="prev-page" class="btn-secondary">Previous</button>
+                        <span id="page-info">Page 1 of 1</span>
+                        <button id="next-page" class="btn-secondary">Next</button>
+                    </div>
+                </div>
+
+                <!-- Analytics Charts -->
+                <div class="analytics-charts">
+                    <div id="trip-frequency" class="chart-container">
+                        <h3>Trip Frequency Analysis</h3>
+                        <div class="chart-controls">
+                            <select id="frequency-period">
+                                <option value="daily">Daily</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="monthly">Monthly</option>
+                            </select>
+                        </div>
+                        <canvas id="trip-frequency-chart"></canvas>
+                    </div>
+
+                    <div id="revenue-analysis" class="chart-container">
+                        <h3>Revenue Analysis</h3>
+                        <div class="chart-controls">
+                            <select id="revenue-view-type">
+                                <option value="line">Line Chart</option>
+                                <option value="bar">Bar Chart</option>
+                            </select>
+                        </div>
+                        <canvas id="revenue-chart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Summary Statistics -->
+                <div class="summary-stats">
+                    <div class="stat-card">
+                        <h4>Total Trips</h4>
+                        <p id="total-trips-count">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Average Distance</h4>
+                        <p id="avg-distance">0 km</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Total Revenue</h4>
+                        <p id="total-revenue">₹0.00</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Average Trip Cost</h4>
+                        <p id="avg-trip-cost">₹0.00</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+              <section id="visualization">
+            <h2>Visualization Tools</h2>
+            <div id="dashboard">
+                <h3>Interactive Dashboard</h3>
+                <div class="chart-container">
+                    <canvas id="income-chart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="expense-chart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="trip-chart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="utilization-chart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="patient-distribution-chart"></canvas>
+                </div>
+            </div>
+
+            <div id="custom-graphs">
+                <h3>Custom Graphs</h3>
+                <form id="custom-graph-form">
+                    <label for="graph-type">Graph Type:</label>
+                    <select id="graph-type" name="graph-type" required>
+                        <option value="bar">Bar Chart</option>
+                        <option value="line">Line Chart</option>
+                        <option value="pie">Pie Chart</option>
+                    </select>
+
+                    <label for="graph-data">Data:</label>
+                    <select id="graph-data" name="graph-data" required>
+                        <option value="revenue">Revenue</option>
+                        <option value="trips">Number of Trips</option>
+                        <option value="expenditure">Expenditure</option>
+                    </select>
+
+                    <label for="graph-period">Time Period:</label>
+                    <select id="graph-period" name="graph-period" required>
+                        <option value="daily">Daily</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="monthly">Monthly</option>
+                        <option value="yearly">Yearly</option>
+                        <option value="custom">Custom</option>
+                    </select>
+
+                    <div class="date-range" style="display: none;">
+                        <label for="graph-start-date">Start Date:</label>
+                        <input type="date" id="graph-start-date" name="graph-start-date">
+
+                        <label for="graph-end-date">End Date:</label>
+                        <input type="date" id="graph-end-date" name="graph-end-date">
+                    </div>
+
+                    <button type="submit">Generate Graph</button>
+                </form>
+                <div class="chart-container">
+                    <canvas id="custom-graph"></canvas>
+                </div>
+            </div>
+
+            <div id="comparison-reports">
+                <h3>Comparison Reports</h3>
+                <form id="comparison-form">
+                    <label for="comparison-type">Comparison Type:</label>
+                    <select id="comparison-type" name="comparison-type" required>
+                        <option value="revenue">Revenue</option>
+                        <option value="trips">Number of Trips</option>
+                        <option value="expenditure">Expenditure</option>
+                    </select>
+
+                    <label for="comparison-by">Compare By:</label>
+                    <select id="comparison-by" name="comparison-by" required>
+                        <option value="ambulance">Ambulance</option>
+                        <option value="driver">Driver</option>
+                        <option value="nursing">Nursing Staff</option>
+                    </select>
+
+                    <button type="submit">Generate Comparison</button>
+                </form>
+                <div id="comparison-report"></div>
+            </div>
+        </section>
+
+
+              <section id="financial-reports">
+            <h2>Financial Tools and Reports</h2>
+            <div id="financial-tracking">
+                <h3>Financial Tracking</h3>
+                <div class="tracking-controls">
+                    <label for="tracking-period">Select Period:</label>
+                    <select id="tracking-period" name="tracking-period">
+                        <option value="daily">Daily</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="monthly">Monthly</option>
+                        <option value="quarterly">Quarterly</option>
+                        <option value="yearly">Yearly</option>
+                        <option value="custom">Custom</option>
+                    </select>
+                    <div class="date-range" style="display: none;">
+                        <input type="date" id="tracking-start-date" name="tracking-start-date">
+                        <input type="date" id="tracking-end-date" name="tracking-end-date">
+                    </div>
+                    <button id="generate-tracking" class="btn-primary">Generate Tracking</button>
+                </div>
+                
+                <div class="table-container">
+                    <table id="financial-tracking-table" class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Period</th>
+                                <th>Income</th>
+                                <th>Expenses</th>
+                                <th>Profit</th>
+                                <th>Growth</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Financial tracking data will be dynamically populated -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="tax-compliance">
+                <h3>Tax and Compliance Reports</h3>
+                <div class="report-controls">
+                    <button id="generate-tax-report" class="btn-primary">Generate Tax Report</button>
+                    <button id="generate-compliance-report" class="btn-primary">Generate Compliance Report</button>
+                </div>
+                <div id="tax-report-preview"></div>
+            </div>
+
+            <div id="ambulance-profitability">
+                <h3>Profitability by Ambulance</h3>
+                <table id="ambulance-profitability-table" class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Ambulance ID</th>
+                            <th>Total Trips</th>
+                            <th>Revenue</th>
+                            <th>Expenses</th>
+                            <th>Profit</th>
+                            <th>Profit Margin</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Ambulance profitability data will be dynamically populated -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+
+              <section id="tracking">
+            <h2>Tracking Tools</h2>
+            <div id="ambulance-movement">
+                <h3>Ambulance Movement Tracking</h3>
+                <div class="tracking-controls">
+                    <label for="ambulance-select">Select Ambulance:</label>
+                    <select id="ambulance-select" name="ambulance-select">
+                        <option value="">Select an ambulance...</option>
+                        <!-- Options will be dynamically populated -->
+                    </select>
+
+                    <div class="date-range">
+                        <label for="tracking-start">Start Date:</label>
+                        <input type="date" id="tracking-start" name="tracking-start">
+
+                        <label for="tracking-end">End Date:</label>
+                        <input type="date" id="tracking-end" name="tracking-end">
+                    </div>
+
+                    <button id="track-ambulance" class="btn-primary">Track Ambulance</button>
+                </div>
+                <div id="ambulance-movement-map"></div>
+            </div>
+
+            <div id="ambulance-status">
+                <h3>Real-Time Ambulance Status</h3>
+                <table id="ambulance-status-table">
+                    <thead>
+                        <tr>
+                            <th>Ambulance</th>
+                            <th>Status</th>
+                            <th>Last Updated</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Status data will be dynamically populated -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="automation">
+            <h2>Automation Tools</h2>
+            <div id="alerts-reminders">
+                <h3>Alerts and Reminders</h3>
+                <form id="alert-form">
+                    <label for="alert-type">Alert Type:</label>
+                    <select id="alert-type" name="alert-type" required>
+                        <option value="maintenance">Maintenance</option>
+                        <option value="expenditure">High Expenditure</option>
+                        <option value="trip">Unusual Trip Data</option>
+                    </select>
+
+                    <label for="alert-threshold">Threshold:</label>
+                    <input type="number" id="alert-threshold" name="alert-threshold" required>
+
+                    <button type="submit">Set Alert</button>
+                </form>
+                <div id="active-alerts"></div>
+            </div>
+
+            <div id="report-generation">
+                <h3>Automatic Report Generation</h3>
+                <form id="report-form">
+                    <label for="report-type">Report Type:</label>
+                    <select id="report-type" name="report-type" required>
+                        <option value="trip">Trip Performance</option>
+                        <option value="financial">Financial</option>
+                        <option value="analysis">Individual Analysis</option>
+                    </select>
+
+                    <label for="report-frequency">Frequency:</label>
+                    <select id="report-frequency" name="report-frequency" required>
+                        <option value="daily">Daily</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="monthly">Monthly</option>
+                        <option value="quarterly">Quarterly</option>
+                        <option value="yearly">Yearly</option>
+                        <option value="custom">Custom</option>
+                    </select>
+
+                    <div class="date-range" style="display: none;">
+                        <label for="report-start-date">Start Date:</label>
+                        <input type="date" id="report-start-date" name="report-start-date">
+
+                        <label for="report-end-date">End Date:</label>
+                        <input type="date" id="report-end-date" name="report-end-date">
+                    </div>
+
+                    <label for="report-delivery">Delivery Method:</label>
+                    <select id="report-delivery" name="report-delivery" required>
+                        <option value="download">Download</option>
+                        <option value="email">Email</option>
+                    </select>
+
+                    <div id="email-field" style="display: none;">
+                        <label for="report-email">Email Address:</label>
+                        <input type="email" id="report-email" name="report-email">
+                    </div>
+
+                    <button type="submit">Generate Report</button>
+                </form>
+            </div>
+        </section>
+
+
+              <section id="lead-management">
+            <h2>Lead Generation and Management</h2>
+            <form id="lead-form">
+                <h3>Lead Details</h3>
+                <label for="lead-name">Name:</label>
+                <input type="text" id="lead-name" name="lead-name" required>
+
+                <label for="lead-service">Required Service:</label>
+                <input type="text" id="lead-service" name="lead-service" required>
+
+                <label for="lead-urgency">Urgency Level:</label>
+                <select id="lead-urgency" name="lead-urgency" required>
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                </select>
+
+                <label for="lead-source">Referral Source:</label>
+                <input type="text" id="lead-source" name="lead-source">
+
+                <button type="submit">Submit Lead</button>
+            </form>
+
+            <div id="lead-tracker">
+                <h3>Follow-Up Tracker</h3>
+                <table id="lead-tracker-table">
+                    <thead>
+                        <tr>
+                            <th>Lead</th>
+                            <th>Last Follow-Up</th>
+                            <th>Next Follow-Up</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Lead tracking data will be dynamically populated -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="conversion-analytics">
+                <h3>Conversion Analytics</h3>
+                <div class="chart-container">
+                    <canvas id="conversion-chart"></canvas>
+                </div>
+                <div id="conversion-stats"></div>
+            </div>
+        </section>
+
+        <section id="import-export">
+            <h2>Export and Import Tools</h2>
+            <div id="data-export">
+                <h3>Data Export</h3>
+                <form id="export-form">
+                    <label for="export-data">Select Data:</label>
+                    <select id="export-data" name="export-data" required>
+                        <option value="trips">Trip Details</option>
+                        <option value="financials">Financials</option>
+                        <option value="analytics">Analytics</option>
+                    </select>
+
+                    <label for="export-format">Export Format:</label>
+                    <select id="export-format" name="export-format" required>
+                        <option value="csv">CSV</option>
+                        <option value="json">JSON</option>
+                        <option value="pdf">PDF</option>
+                    </select>
+
+                    <button type="submit">Export Data</button>
+                </form>
+            </div>
+
+            <div id="data-import">
+                <h3>Data Import</h3>
+                <form id="import-form">
+                    <label for="import-file">Select File:</label>
+                    <input type="file" id="import-file" name="import-file" accept=".csv,.json" required>
+
+                    <button type="submit">Import Data</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Life Plus Health Care. All rights reserved.</p>
+    </footer>
+
+    <!-- Third-party Scripts -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Local Scripts -->
+    <script src="utils.js"></script>
+    <script src="storage.js"></script>
+    <script src="state.js"></script>
+    <script src="tripManagement.js"></script>
+    <script src="leadManagement.js"></script>
+    <script src="visualizationTools.js"></script>
+    <script src="trackingTools.js"></script>
+    <script src="exportImportTools.js"></script>
+    <script src="init.js"></script>
+</body>
+</html>
